@@ -1,0 +1,85 @@
+configuracion de la base de datos
+
+    ////crear base de datos:
+
+CREATE DATABASE splitbuydb;
+
+
+    ////acceder a la base de datos
+
+USE splitbuydb;
+
+    ////crear tabla usuarios
+
+CREATE TABLE usuarios(
+id_usuario int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nombre_usuario varchar(100) NOT NULL,
+correo_usuario varchar(100) NOT NULL UNIQUE,
+contrasena_usuario varchar(200) NOT NULL,
+telefono_usuario varchar(20)
+);
+
+    ////crear tabla grupos
+
+CREATE TABLE grupos(
+	id_grupos INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    nombre_grupo VARCHAR(100) NOT NULL,
+    descripcion_grupo TEXT,
+    fecha_creacion_grupo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id_usuario_creador INT,
+    FOREIGN KEY(id_usuario_creador) REFERENCES usuarios(id_usuario)
+    ON DELETE SET NULL
+);
+
+    ////crear tabla usuarios-grupos
+
+CREATE TABLE pertenecen(
+id_usuario INT,
+id_grupo INT,
+PRIMARY KEY (id_usuario, id_grupo),
+FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+ON DELETE CASCADE,
+FOREIGN KEY (id_grupo) REFERENCES grupos(id_grupos)
+ON DELETE CASCADE
+); 
+
+    ////creacion tabla gastos
+
+CREATE TABLE gastos(
+id_gasto INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+nombre_gasto VARCHAR(100) NOT NULL,
+monto_gasto FLOAT NOT NULL,
+fecha_gasto DATE NOT NULL,
+fecha_registro_gas TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+id_grupo INT NOT NULL,
+id_usuario INT,
+FOREIGN KEY(id_grupo) REFERENCES grupos(id_grupos)
+ON DELETE RESTRICT,
+FOREIGN KEY(id_usuario) REFERENCES usuarios(id_usuario)
+ON DELETE SET NULL
+);
+
+    ////tabla participantes_gastos
+    
+CREATE TABLE participantes_gasto(
+id_gasto INT NOT NULL,
+id_usuario INT NOT NULL,
+monto float NOT NULL,
+FOREIGN KEY (id_gasto) REFERENCES gastos(id_gasto)
+ON DELETE CASCADE,
+FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+ON DELETE CASCADE
+);
+
+    ////tabla notificaciones
+CREATE TABLE notificaciones(
+id_notificacion INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+id_usuario INT,
+id_grupo INT,
+mensaje TEXT,
+fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+ON DELETE CASCADE,
+FOREIGN KEY(id_grupo) REFERENCES grupos(id_grupos)
+ON DELETE CASCADE
+);
