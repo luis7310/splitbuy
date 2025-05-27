@@ -72,6 +72,7 @@ ON DELETE CASCADE
 );
 
     ////tabla notificaciones
+    
 CREATE TABLE notificaciones(
 id_notificacion INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 id_usuario INT,
