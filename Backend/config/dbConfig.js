@@ -1,3 +1,3 @@
 const mysql = require('mysql2');
 
-require('dotenv').config(); //omportacion de las variables globales
+require('dotenv').config(); //importacion de las variables globales
