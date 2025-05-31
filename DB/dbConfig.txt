@@ -84,3 +84,14 @@ ON DELETE CASCADE,
 FOREIGN KEY(id_grupo) REFERENCES grupos(id_grupos)
 ON DELETE CASCADE
 );
+
+    ////Otorgar permisos de administrador a usuarios
+GRANT SELECT, INSERT, UPDATE, DELETE ON splitbuydb.* TO 'admin'@'localhost';
+O
+GRANT ALL PRIVILEGES ON *.* TO TO 'admin'@'localhost';
+
+    ////Actualizar privilegios
+FLUSH PRIVILEGES;
+
+    ////crear usuarios
+CREATE USER 'nombre'@'localhost' IDENTIFIED BY 'password';
