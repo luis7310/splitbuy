@@ -103,6 +103,28 @@ async function updatePasswordUsuario(req, res){
     }
 }
 
+//PENDIENTE
+//controlador resetablecer contraseña usuario
+async function restablecerContra(req, res){
+    if(!req.body.correo){
+        return res.status(400).json({ mensaje: 'Datos incompletos' });
+    }
+    else{
+        //codigo mysql
+        let sqlCode = 'SELECT * FROM usuarios WHERE correo_usuario = ?';
+        //peticion a la base de datos
+        const [rows] = await connection.promise().query(sqlCode, [req.body.correo]);
+        //si no se encuentra el usuario se devuelve el mensaje de no encontrado
+        if (!rows[0]) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        else{
+            const tokenR = jwt.sign({ id: rows[0].id_usuario, email: rows[0].correo_usuario }, SECRET, { expiresIn: '10m' });
+            res.json({ message: 'token de acceso', tokenR });
+        }
+    }
+}
+
 module.exports = {
-  registrarUsuario, logginUsuario, updatePasswordUsuario
+  registrarUsuario, logginUsuario, updatePasswordUsuario, restablecerContra
 };
