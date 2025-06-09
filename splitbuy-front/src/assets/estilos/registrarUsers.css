@@ -1,0 +1,79 @@
+/*Estilo del contenedor*/
+.form-container{
+    display: flex;
+    justify-content: center;   /* Centrado horizontal */
+    align-items: center;       /* Centrado vertical */
+    height: 100vh;
+    width: 100vw;
+}
+
+/*Estilo del formulario contenedor*/
+.form-style {
+    width: 360px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Estilos del input */
+
+.input-form{
+    background-color: #333446;
+    height: 25px;
+    width: 350px;
+    border-radius: 10px;
+    border: 1px solid #B8CFCE;
+    color: #EAEFEF;
+    font-size: 12px;
+}
+
+.input-form::placeholder{
+    color: #B8CFCE;
+}
+
+.input-form:hover{
+    background-color: #3b3b4d;
+}
+
+.input-form:focus{
+    outline: 1.5px solid #B8CFCE;
+    background-color: #47475f;
+}
+
+/*Estilos del boton de aceptar*/
+
+.btn-form{
+    width: 300px;
+    height: 30px;
+    border: 1px solid #B8CFCE;
+    border-radius: 10px;
+    color: #B8CFCE;
+    background-color: #333446;
+    margin-left: 25px;
+    font-size: 13px;
+}
+
+.btn-form:hover{
+    cursor: pointer;
+    background-color: #3b3b4d;
+}
+
+.btn-form:active{
+    background-color: #47475f;
+    border-color:#EAEFEF;
+    font-size: 12px;
+}
+
+/*Estilos del mensaje de error*/
+
+.msg-text{
+    width: 350px;
+    height: 40px;
+    max-width: 350px;
+    max-height: 40px;
+    margin-left: 5px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+}
