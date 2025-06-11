@@ -77,3 +77,18 @@
     font-family: 'Arial', sans-serif;
     font-size: 15px;
 }
+
+/*Clases de error*/
+    /*Clases mensaje de error text*/
+.msg-text_error{
+    color: #ff8686;
+}
+
+    /* Clases inputs */
+.input_error{
+    border: 1.5px solid #ff8686;
+}
+
+.input_error::placeholder{
+    color: #ff8686;
+}
