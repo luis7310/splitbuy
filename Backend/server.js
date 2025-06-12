@@ -10,6 +10,10 @@ const port = process.env.port;
 
 //middleware
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5173', // permite peticiones desde tu frontend
+  credentials: true,               // si usas cookies o headers personalizados
+}));
 
 //rutas
 app.use('/usuarios', rutasUsuarios); //rutas funciones usuarios

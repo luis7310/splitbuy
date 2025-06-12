@@ -3,17 +3,18 @@ import {useForm} from 'react-hook-form'
 import { useState } from 'react';
 
 function RegistrarUsers() {
-  const {register, handleSubmit, formState: {errors}} = useForm(); 
+  const {register, handleSubmit, reset, formState: {errors}} = useForm(); 
   const [mensaje, setMensaje] = useState('');
+  const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  
-  const onSub = handleSubmit((data)=>{
+  const onSub = handleSubmit(async (data)=>{
     setMensaje('');
     if(data.nombre == ''){
       setMensaje('Ingrese un nombre de usuario.');
     }
     else{
-      if(data.correo == ''){
-        setMensaje('Ingrese un correo.');
+      if(data.correo == '' || !regexCorreo.test(data.correo)){
+        setMensaje('Ingrese un correo válido.');
       }
       else{
         if(data.password == '' || data.password.length < 5){
@@ -30,6 +31,32 @@ function RegistrarUsers() {
             else{
               if(data.telefono == ''){
                  setMensaje('Ingrese su número telefónico.');
+              }
+              else{
+                  try{
+                       const respuesta = await fetch('http://localhost:3000/usuarios/registrar/usuario', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(data),
+                        });
+                        if(respuesta.ok == true){
+                          reset();
+                          setMensaje('Se ha creado su usuario.');
+                          setTimeout(() => {
+                            setMensaje('');
+                          }, 3000);
+                        }
+                        else{
+                          let res = await respuesta.json();
+                          console.log(res);
+                          setMensaje(res.error);
+                        }
+                  }
+                  catch{
+                    setMensaje('Algo salió mal, intente nuevamente.');
+                  }
               }
             }
           }

@@ -7,8 +7,9 @@ const SECRET = process.env.secret;
 
 //funcion para registrar usuarios
 async function registrarUsuario(req, res){
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     //validacion de datos completos
-    if(!req.body.nombre || !req.body.correo || !req.body.password){
+    if(!req.body.nombre || !req.body.correo || !req.body.password || !regexCorreo.test(req.body.correo)){
         return res.status(400).json({ mensaje: 'Datos incompletos' });
     }
     else{
