@@ -5,7 +5,7 @@ const { registrarUsuario, logginUsuario, updatePasswordUsuario, restablecerContr
 //registrar un nuevo usuario
 router.post('/registrar/usuario', registrarUsuario);
 //validar credenciales de inicio de sesion
-router.get('/loggin/usuario', logginUsuario);
+router.post('/loggin/usuario', logginUsuario);
 //cambiar contraseña usuario
 router.post('/update/userpassword', updatePasswordUsuario);
 //restablecer contraseña

@@ -1,0 +1,94 @@
+#container{
+    min-width: 400px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+form {
+    gap:15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*Estilos del inputs*/
+
+.inputs-login{
+    background-color: #333446;
+    height: 25px;
+    width: 300px;
+    border-radius: 10px;
+    border: 1px solid #B8CFCE;
+    color: #EAEFEF;
+    font-size: 12px;
+}
+
+.inputs-login::placeholder{
+    color: #B8CFCE;
+}
+
+.inputs-login:hover{
+    background-color: #3b3b4d;
+}
+
+.inputs-login:focus{
+    outline: 1.5px solid #B8CFCE;
+    background-color: #47475f;
+}
+
+/*Estilos del boton*/
+
+.btn-login{
+    width: 200px;
+    height: 30px;
+    border: 1px solid #B8CFCE;
+    border-radius: 10px;
+    color: #B8CFCE;
+    background-color: #333446;
+    font-size: 13px;
+}
+
+.btn-login:hover{
+    cursor: pointer;
+    background-color: #3b3b4d;
+}
+
+.btn-login:active{
+    background-color: #47475f;
+    border-color:#EAEFEF;
+    font-size: 12px;
+}
+
+/*Estilos del cuadro de texto*/
+
+.msg-text-log{
+    width: 350px;
+    height: 40px;
+    max-width: 350px;
+    max-height: 40px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    color: #ff8686;
+}
+
+/* Estilos del botton olvido su contraseña*/
+
+.reset-pswd{
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    color: #7F8CAA;
+    text-decoration: none;
+}
+
+.reset-pswd:hover {
+    color:#B8CFCE;    
+}
+
+.reset-pswd:active {
+    color: #EAEFEF;  
+}
