@@ -46,6 +46,7 @@ function RegistrarUsers() {
                           setMensaje('Se ha creado su usuario.');
                           setTimeout(() => {
                             setMensaje('');
+                            window.location = '/login';
                           }, 3000);
                         }
                         else{
@@ -73,8 +74,9 @@ function RegistrarUsers() {
         <input className='input-form' type='password'  {...register("password")} placeholder='Contraseña'></input>       
         <input className='input-form' type='password'  {...register("password2")} placeholder='Confirmar contraseña'></input>       
         <input className='input-form' type='number'  {...register("telefono")} placeholder='Telefono'></input>
-        <button className='btn-form'>Registrar</button>
+        <button type='submit' className='btn-form'>Registrar</button>
         <div className='msg-text msg-text_error'>{mensaje}</div>
+        <a href='/login'><button className='btn-form' type="button">Iniciar sesión</button></a>
       </form>
     </div>
   )

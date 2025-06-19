@@ -1,6 +1,7 @@
 import '../estilos/login.css'
 import {useForm} from 'react-hook-form'
 import { useState } from 'react';
+import  AuthVal  from '../../auth/authVal';
 
 function Log() {
   const {register, handleSubmit, reset, formState: {errors}} = useForm();
@@ -21,7 +22,6 @@ function Log() {
           setMensajeLog('Ingrese su contraseña.');
         }
         else{
-          console.log(data);
           const respuesta = await fetch('http://localhost:3000/usuarios/loggin/usuario', {
             method: 'POST',
             headers: {
@@ -29,9 +29,17 @@ function Log() {
             },
             body: JSON.stringify(data),
           });
-          console.log(respuesta);
           let res = await respuesta.json();
-          console.log(res);
+          const status = AuthVal(res.token);
+          if(status.estado == true){
+            //window.location = '/';
+          }
+          else{
+            setMensajeLog('No se puede iniciar sesión');
+            setTimeout(() => {
+              setMensajeLog('');
+              }, 5000);
+          }
           reset();
         }
       }
@@ -45,7 +53,7 @@ function Log() {
         <input placeholder='Contraseña' {...register("password")} type="password" className='inputs-login'></input>
         <button type='submit' className='btn-login' onClick={loginBtn}>Iniciar sesión</button>
         <div className='msg-text-log'>{mensajeLog}</div>
-        <button type='button' className='btn-login'>Crear una cuenta</button>
+        <a href='/singin'><button type='button' className='btn-login'>Crear una cuenta</button></a>
         <a className='reset-pswd' href='#'>¿Olvidó su contraseña?</a>
       </form>
     </div>
