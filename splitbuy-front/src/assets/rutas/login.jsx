@@ -1,12 +1,14 @@
 import '../estilos/login.css'
 import {useForm} from 'react-hook-form'
 import { useState } from 'react';
-import  AuthVal  from '../../auth/authVal';
+import saveToken from '../../auth/tokenSave';
+import { useNavigate } from "react-router-dom";
 
 function Log() {
   const {register, handleSubmit, reset, formState: {errors}} = useForm();
   const [mensajeLog, setMensajeLog] = useState('');
   const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const navigate = useNavigate();
 
   const loginBtn = handleSubmit(async (data)=>{
     setMensajeLog('');
@@ -30,9 +32,9 @@ function Log() {
             body: JSON.stringify(data),
           });
           let res = await respuesta.json();
-          const status = AuthVal(res.token);
-          if(status.estado == true){
-            //window.location = '/';
+          const status = saveToken(res.token);
+          if(status == true){
+            navigate("/home");
           }
           else{
             setMensajeLog('No se puede iniciar sesión');

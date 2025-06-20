@@ -5,7 +5,7 @@ import App from './App.jsx'
 import Log from './assets/rutas/login.jsx'
 import RegistrarUsers from './assets/rutas/registroUsers.jsx'
 import ProtectedRoute from './assets/rutas/ProtectedRoute.jsx'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 
 const router = createBrowserRouter([
     {
@@ -16,16 +16,20 @@ const router = createBrowserRouter([
     path: '/singin',
     element: <RegistrarUsers />,
    },
-   {
+ {
     path: '/',
     element: <ProtectedRoute />,
-    children:[
+    children: [
       {
-        path: '/',
-        element: <App/>
+        path: '',
+        element: <Navigate to="/home" />
+      },
+      {
+        path: 'home',
+        element: <App />
       }
     ]
-   }
+  }
 ])
 
 createRoot(document.getElementById('root')).render(
