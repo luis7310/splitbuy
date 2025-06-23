@@ -5,6 +5,7 @@ import App from './App.jsx'
 import Log from './assets/rutas/login.jsx'
 import RegistrarUsers from './assets/rutas/registroUsers.jsx'
 import ProtectedRoute from './assets/rutas/ProtectedRoute.jsx'
+import NotFound from './assets/rutas/NotFound.jsx'
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: 'home',
         element: <App />
+      },
+      {
+        path: '*',
+        element: <NotFound />
       }
     ]
   }
