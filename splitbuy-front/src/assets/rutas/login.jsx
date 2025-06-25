@@ -24,7 +24,8 @@ function Log() {
           setMensajeLog('Ingrese su contraseña.');
         }
         else{
-          const respuesta = await fetch('http://localhost:3000/usuarios/loggin/usuario', {
+          try{
+                      const respuesta = await fetch('http://localhost:3000/usuarios/loggin/usuario', {
             method: 'POST',
             headers: {
              'Content-Type': 'application/json',
@@ -37,12 +38,20 @@ function Log() {
             navigate("/home");
           }
           else{
-            setMensajeLog('No se puede iniciar sesión');
+            setMensajeLog('Usuario o contraseña incorrectos');
             setTimeout(() => {
               setMensajeLog('');
               }, 5000);
           }
           reset();
+          }
+          catch{
+            setMensajeLog('No se puede iniciar sesión');
+            setTimeout(() => {
+              setMensajeLog('');
+              }, 5000);
+              reset();
+          }
         }
       }
     }
