@@ -1,11 +1,21 @@
-import './App.css'
+import '../src/assets/estilos/app.css'
 import NavBar from './assets/elements/NavBar'
 
 function App() {
   return (
     <>
       <NavBar></NavBar>
-      <h1>COMING SOON...</h1>
+      <div id="container-middle">
+          <aside className="aside">
+
+          </aside>
+          <main id="main">
+            
+          </main>
+          <aside className='aside'>
+
+          </aside>
+      </div>
     </>
   )
 }

@@ -1,0 +1,28 @@
+@media screen and (min-width:851px) {
+    #container-middle{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 10px; 
+    height: 100vh
+    }
+
+    /*.aside{
+        
+    } */
+
+    /*#main{
+        background-color: white;
+    }*/
+}
+
+
+@media screen and (max-width:850px) {
+    .aside{
+        display: none;
+    }
+
+    #main{
+        width: 100%;
+        height: 100vh;
+    }
+}
