@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const rutasUsuarios = require('./rutas/rutasUsuarios');
+const rutasGrupos = require('./rutas/rutasGrupos');
 
 //configuracion
 const app = express();
@@ -17,6 +18,7 @@ app.use(cors({
 
 //rutas
 app.use('/usuarios', rutasUsuarios); //rutas funciones usuarios
+app.use('/grupos', rutasGrupos); //rutas funciones de grupos
 
 //server
 app.listen(port,()=>{

@@ -10,6 +10,17 @@ export default function NavBar(){
     const [token, setToken] = useState(null);
     const [itsOpen, setItsOpen] = useState(false);
     const [menuResponsive, setMenuRespo] = useState(false);
+    const [formData, setFormData] = useState({
+        nombregrupo: '',
+        descripciongrupo: ''
+        });
+
+    const handleChange = (e) => {
+    setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+    });
+    };
 
     useEffect(() => {
       var tok = getToken();
@@ -26,6 +37,29 @@ export default function NavBar(){
         else{
             cerrarSesion();
         }
+    }
+
+    async function crearGrupo(event){
+        event.preventDefault()
+        var datos = getToken();
+        var info = {
+            "nombre": formData.nombregrupo,
+            "descripcion":formData.descripciongrupo,
+            "id_user": datos.id
+        }
+         const respuesta = await fetch('http://localhost:3000/grupos/crear/grupo', {
+            method: 'POST',
+            headers: {
+             'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(info),
+          });
+          setFormData({
+            nombregrupo: '',
+            descripciongrupo: ''
+          })
+          setItsOpen(false);
+          goHome();
     }
 
     const cerrarSesion = ()=>{
@@ -82,11 +116,11 @@ export default function NavBar(){
                 <div className="modal-backdrop">
                     <form id="formcontainer">
                         <label htmlFor="nombregrupo">Nombre del gasto</label>
-                        <input className='inputs-modal' id="nombregrupo" type="text" />
+                        <input name="nombregrupo" className='inputs-modal' id="nombregrupo" value={formData.nombregrupo} onChange={handleChange} type="text" />
                         <label htmlFor="descripciongrupo">Descripción</label>
-                        <input className='inputs-modal' id="descripciongrupo" type="text" />
+                        <input name="descripciongrupo" className='inputs-modal' id="descripciongrupo"  value={formData.descripciongrupo} onChange={handleChange} type="text" />
                         <div className='modal-buttons'>
-                            <button className='btn-modal' type="submit">Crear</button>
+                            <button className='btn-modal' type="submit" onClick={crearGrupo}>Crear</button>
                             <button className='btn-modal' type="button" onClick={() => setItsOpen(false)}>Cancelar</button>
                         </div>
                     </form>
@@ -95,6 +129,7 @@ export default function NavBar(){
             {menuResponsive && (
                 <div id="menu-responsive">
                     <button onClick={goHome} className='btn-menu-resp'>Reload</button>
+                    <button onClick={() => setItsOpen(true)} className='btn-menu-resp'>Agregar Gasto</button>
                     <button className='btn-menu-resp'>Configuracion</button>
                     <button className='btn-menu-resp'>Actualizar contraseña</button>
                     <button onClick={cerrarSesion} className='btn-menu-resp'>Cerrar sesión</button>

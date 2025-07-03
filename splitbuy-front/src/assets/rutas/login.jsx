@@ -25,7 +25,7 @@ function Log() {
         }
         else{
           try{
-                      const respuesta = await fetch('http://localhost:3000/usuarios/loggin/usuario', {
+            const respuesta = await fetch('http://localhost:3000/usuarios/loggin/usuario', {
             method: 'POST',
             headers: {
              'Content-Type': 'application/json',
