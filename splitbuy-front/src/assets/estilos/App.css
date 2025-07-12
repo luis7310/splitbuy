@@ -1,19 +1,26 @@
+    #container-middle{
+    padding-top: 60px;
+    }
+
 @media screen and (min-width:851px) {
     #container-middle{
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: 10px; 
-    height: 100vh
+    height: calc(100vh - 60px);
     }
 
     /*.aside{
         
     } */
 
-    /*#main{
-        background-color: white;
-    }*/
+    #main{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 }
+
+
 
 
 @media screen and (max-width:850px) {

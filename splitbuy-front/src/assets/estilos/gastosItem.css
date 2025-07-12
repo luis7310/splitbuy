@@ -1,0 +1,53 @@
+/*Estilos computadoras*/
+
+@media screen and (min-width:851px) {
+    #container-item{
+    width: 300px;
+    height: 150px;
+    }
+}
+
+/* Estilos celular*/
+@media screen and (max-width:850px) {
+    #container-item{
+    width: 400px;
+    height: 200px;
+    }
+}
+
+/* Estilos globales*/
+#container-item{
+    background-color: #B8CFCE;
+    border-radius: 10px;
+    border: 2px solid #7F8CAA;
+    padding: 10px;
+    margin: 10px;
+    box-sizing: border-box;
+    color: #333446;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    user-select: none;
+}
+
+#container-item:active{
+    background-color: #7F8CAA;
+}
+
+h2{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 30px;
+    margin: 0;
+}
+
+p{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 20px;
+    margin: 0;
+    color: #7F8CAA;
+}
+

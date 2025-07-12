@@ -13,7 +13,6 @@ function registrarGrupo(req, res){
             }
             else{
                 const idGrupoCreado = results.insertId;
-                console.log(idGrupoCreado);
                 let resp = agregarUsuariosGp(req.body.id_user, idGrupoCreado) //Agregamos al usuario creador al grupo
                 if(resp = 1){
                     res.status(201).json({ mensaje: 'Grupo agregado'});
@@ -43,6 +42,23 @@ function agregarUsuariosGp(idUser, idGrupo){
     }
 }
 
+function gruposUsuario(req, res){
+    if(req.body.id_user){
+        var sqlConsulta = 'SELECT * FROM grupos JOIN pertenecen ON pertenecen.id_grupo = grupos.id_grupos WHERE pertenecen.id_usuario = ' + req.body.id_user + ';';
+         connection.query(sqlConsulta,(err, results, fields)=>{
+            if(err){
+                return res.status(500).json({ mensaje: 'Error de servidor' });
+            }
+            else{
+                return res.status(200).json(results);
+            }
+         })
+    }
+    else{
+        return res.status(400).json({ mensaje: 'Datos incompletos' });
+    }
+}
+
 module.exports = {
-  registrarGrupo
+  registrarGrupo, gruposUsuario
 };

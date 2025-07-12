@@ -41,11 +41,15 @@ export default function NavBar(){
 
     async function crearGrupo(event){
         event.preventDefault()
-        var datos = getToken();
+        if(formData.nombregrupo != ''){
+            var datos = getToken();
         var info = {
             "nombre": formData.nombregrupo,
             "descripcion":formData.descripciongrupo,
             "id_user": datos.id
+        }
+        if(info.descripcion == ''){
+            info.descripcion = 'Sin descripcion del grupo';
         }
          const respuesta = await fetch('http://localhost:3000/grupos/crear/grupo', {
             method: 'POST',
@@ -60,6 +64,11 @@ export default function NavBar(){
           })
           setItsOpen(false);
           goHome();
+        }
+        else{
+            alert("Ingrese un nombre del gasto");
+        }
+        
     }
 
     const cerrarSesion = ()=>{
@@ -96,7 +105,7 @@ export default function NavBar(){
             <div id="nav-left">
                 <button className='btn-design' onClick={goHome}>SplitBuy</button>
                 <button className='btn-design' onClick={goHome}>Inicio</button>
-                <button className='btn-design' onClick={() => setItsOpen(true)}>Agregar gasto</button>
+                <button className='btn-design' onClick={() => setItsOpen(true)}>Agregar grupo</button>
             </div>
             <div id='nav-center'>
                 <input placeholder='Buscar gasto' id="input-search" type='text'></input>
