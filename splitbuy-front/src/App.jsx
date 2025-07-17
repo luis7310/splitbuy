@@ -5,9 +5,12 @@ import AuthVal from './auth/authVal';
 import { useEffect } from 'react';
 import {jwtDecode} from "jwt-decode";
 import { useState } from 'react';
+import GastoWindows from '../src/assets/elements/gastoWindows';
 
 function App() {
   const [userData, setData] = useState([]);
+  const [dataWindow, setWindow] = useState(false);
+  const [idGroupModal, setIdModal] = useState([]);
 
     const cerrarSesion = ()=>{
         sessionStorage.removeItem("tokenSplitbuy");
@@ -50,6 +53,7 @@ async function getsItems(){
   }
 }
 
+//funcion para abrir los objetos
 
     useEffect(() => {
       const setInfo = async ()=>{
@@ -67,6 +71,12 @@ async function getsItems(){
           <aside className="aside">
 
           </aside>
+          {dataWindow && (<GastoWindows
+            idGrupo={idGroupModal.id_grupo}
+            nombreGrupo = {idGroupModal.nombre_grupo}
+            descripcionGrupo = {idGroupModal.descripcion_grupo}
+            fechaCreado = {idGroupModal.fecha_creacion_grupo}
+           ></GastoWindows>)}
           <main id="main">
             <ItemGasto
             titulo={"Agregar grupo"}
@@ -78,7 +88,9 @@ async function getsItems(){
               key={item.id_grupo}
               titulo={item.nombre_grupo}
               descripcion={item.descripcion_grupo}
-              funClick={() => console.log(item)}
+              funClick={()=>{
+                setIdModal(item);
+                setWindow(true);}}
             />
           ))}
           </main>

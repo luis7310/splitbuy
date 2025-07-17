@@ -1,4 +1,5 @@
 #navContainer{
+    z-index: 200;
     min-width: 407px;
     height: 60px;
     width: 100%;
@@ -39,7 +40,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 20;
+  z-index: 300;
   color:#B8CFCE;
 }
 
@@ -218,6 +219,7 @@
         background: #B8CFCE;
         position: absolute;
         min-width: 407px;
+        z-index: 200;
     }
 
     .btn-menu-resp{

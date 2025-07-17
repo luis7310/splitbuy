@@ -49,7 +49,7 @@ export default function NavBar(){
             "id_user": datos.id
         }
         if(info.descripcion == ''){
-            info.descripcion = 'Sin descripcion del grupo';
+            info.descripcion = 'Sin descripcion del grupo.';
         }
          const respuesta = await fetch('http://localhost:3000/grupos/crear/grupo', {
             method: 'POST',
@@ -137,7 +137,7 @@ export default function NavBar(){
             )}
             {menuResponsive && (
                 <div id="menu-responsive">
-                    <button onClick={goHome} className='btn-menu-resp'>Reload</button>
+                    <button onClick={goHome} className='btn-menu-resp'>Home</button>
                     <button onClick={() => setItsOpen(true)} className='btn-menu-resp'>Agregar Gasto</button>
                     <button className='btn-menu-resp'>Configuracion</button>
                     <button className='btn-menu-resp'>Actualizar contraseña</button>
