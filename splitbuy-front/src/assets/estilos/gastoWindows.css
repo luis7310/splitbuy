@@ -32,6 +32,11 @@ p{
     margin-bottom: 5px;
 }
 
+.msj-error{
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    color: #ff8686;
+}
 
 /*Contenedor de las ventanas modales*/
 .containerModal{

@@ -77,7 +77,7 @@ export default function NavBar(){
     }
 
     const goHome = ()=>{
-        navigate("/home");
+        navigate("/");
         window.location.reload();
     }
 

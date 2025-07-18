@@ -42,6 +42,7 @@ function agregarUsuariosGp(idUser, idGrupo){
     }
 }
 
+//controlador seleccionar todos los grupos a los que pertenece el usuario
 function gruposUsuario(req, res){
     if(req.body.id_user){
         var sqlConsulta = 'SELECT * FROM grupos JOIN pertenecen ON pertenecen.id_grupo = grupos.id_grupos WHERE pertenecen.id_usuario = ' + req.body.id_user + ';';
@@ -59,6 +60,11 @@ function gruposUsuario(req, res){
     }
 }
 
+// controlador agregar nuevo gasto a grupo
+function agregarGasto(req, res){
+
+}
+
 module.exports = {
-  registrarGrupo, gruposUsuario
+  registrarGrupo, gruposUsuario, agregarGasto
 };
