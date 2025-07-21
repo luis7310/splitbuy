@@ -1,6 +1,9 @@
 import '../estilos/gastoWindows.css'
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import AuthVal from '../../auth/authVal'
+import {jwtDecode} from "jwt-decode";
+import { ValidarCorreos, cerrarSesion, getToken } from '../controladores/appControllers';
 
 export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fechaCreado}){
     const [agregarGastoM, setAgregarG] = useState(false);
@@ -44,14 +47,92 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                     }, 2000);
                 }
                 else{
-                    let datos = {
-                        
-                    }
+                    var userDatos = getToken();
+                    fetch('http://localhost:3000/grupos/agregar/gasto', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "nombre_gasto": datosFormularios.nombre_gasto,
+                            "monto_gasto": datosFormularios.monto_gasto,
+                            "fecha_gasto": datosFormularios.fecha_gasto,
+                            "id_grupo": idGrupo,
+                            "id_usuario": userDatos.id
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(resp => {
+                        setMensaje('Gasto agregado.');
+                            setTimeout(() => {
+                                setMensaje('');
+                            }, 2000);
+                        setAgregarG(false)
+                    })
+                    .catch(error =>{
+                        setMensaje('Algo ha salido mal, intente mas tarde.');
+                            setTimeout(() => {
+                                setMensaje('');
+                            }, 2000);
+                    })
                 }
             }
         }
     }
 
+    function addUserGroup(){
+        if(!datosFormularios.correo_usuario){
+        setMensaje('Ingrese un correo.');
+            setTimeout(() => {
+                setMensaje('');
+        }, 2000);
+        }
+        else{
+            var valC = ValidarCorreos(datosFormularios.correo_usuario);
+            if(valC == true){
+                var dataNewUser = {
+                    "correo_usuario": datosFormularios.correo_usuario,
+                    "id_grupo": idGrupo
+                }
+                fetch('http://localhost:3000/grupos/agregar/nuevo/usuario',{
+                    method:'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataNewUser),
+                })
+                .then(response => {
+                    if(response.status == 404){
+                        setMensaje("El usuario no existe");
+                        setTimeout(() => {
+                                setMensaje('');
+                        }, 2000);
+                    }
+                        return response.json();
+                    })
+                .then(response2 =>{
+                    setMensaje(response2.mensaje);
+                    setTimeout(() => {
+                            setMensaje('');
+                            setAgregarU(false);
+                    }, 2000);
+                    
+                })
+                .catch(error =>{
+                    setMensaje('Falló al agregar al usuario.');
+                        setTimeout(() => {
+                            setMensaje('');
+                    }, 2000);
+                })
+            }
+            else{
+                setMensaje('Ingrese un correo valido.');
+                    setTimeout(() => {
+                        setMensaje('');
+                }, 2000);
+            }
+        }
+    }
 
     return(
         <div id="container-windows">
@@ -85,7 +166,7 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                         <input className="input_window" type='mail' id="correo_usuario" name='correo_usuario' onChange={manejarCambio}></input>
                         <div className="msj-error">{mensaje}</div>
                         <div className='btn-container-window'>
-                            <button className='btn-modal-windows' >Aceptar</button>
+                            <button className='btn-modal-windows' onClick={addUserGroup}>Aceptar</button>
                             <button className='btn-modal-windows' onClick={() => setAgregarU(false)} >Cancelar</button>
                         </div>
                     </div>

@@ -57,7 +57,7 @@ async function logginUsuario(req, res){
             }
             else{
                 //si coinciden se regresa el token con los datos
-                const token = jwt.sign({ id: rows[0].id_usuario, nombre: rows[0].nombre_usuario, email: rows[0].correo_usuario }, SECRET, { expiresIn: '1h' });
+                const token = jwt.sign({ id: rows[0].id_usuario, nombre: rows[0].nombre_usuario, email: rows[0].correo_usuario }, SECRET, { expiresIn: '6h' });
                 res.json({ message: 'Login exitoso', token });
             }
         }

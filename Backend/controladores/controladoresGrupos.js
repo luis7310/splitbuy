@@ -7,14 +7,21 @@ function registrarGrupo(req, res){
     }
     else{
         const sqlCode = `INSERT INTO grupos (nombre_grupo, descripcion_grupo, id_usuario_creador) VALUES ('${req.body.nombre}', '${req.body.descripcion}', '${req.body.id_user}')`;
-        connection.query(sqlCode,(err, results, fields)=>{
+        connection.query(sqlCode,async (err, results, fields)=>{
             if(err){
                 return res.status(500).json({ mensaje: 'Error de servidor' });
             }
             else{
                 const idGrupoCreado = results.insertId;
-                let resp = agregarUsuariosGp(req.body.id_user, idGrupoCreado) //Agregamos al usuario creador al grupo
-                if(resp = 1){
+                var resp;
+                try{
+                     resp = await agregarUsuariosGp(req.body.id_user, idGrupoCreado) //Agregamos al usuario creador al grupo
+                }
+                catch{
+                     resp = 0;
+                }
+                
+                if(resp == 1){
                     res.status(201).json({ mensaje: 'Grupo agregado'});
                 }
                 else{
@@ -27,20 +34,27 @@ function registrarGrupo(req, res){
 
 //agregar usuarios a grupos
 function agregarUsuariosGp(idUser, idGrupo){
-    if(!idUser || !idGrupo){
-        return 0;
+    return new Promise((resolve, reject)=>{
+        if(!idUser || !idGrupo){
+        reject(0);
     }else{
         const sqlCode = `INSERT INTO pertenecen (id_usuario, id_grupo) VALUES ('${idUser}', '${idGrupo}')`;
         connection.query(sqlCode,(err, results, fields)=>{
             if(err){
-                return 0;
+                if(err.errno == 1062){
+                    reject(3);
+                }
+                reject(0);
             }
             else{
-                return 1;
+                resolve(1);
             }
         })
     }
+})
 }
+
+
 
 //controlador seleccionar todos los grupos a los que pertenece el usuario
 function gruposUsuario(req, res){
@@ -62,9 +76,87 @@ function gruposUsuario(req, res){
 
 // controlador agregar nuevo gasto a grupo
 function agregarGasto(req, res){
+    if(!req.body.nombre_gasto){
+        return res.status(400).json({ mensaje: 'Datos incompletos' });
+    }
+    else{
+        if(!req.body.monto_gasto){
+            return res.status(400).json({ mensaje: 'Datos incompletos' });
+        }
+        else{
+            if(!req.body.fecha_gasto){
+                return res.status(400).json({ mensaje: 'Datos incompletos' });
+            }
+            else{
+                if(!req.body.id_grupo){
+                    return res.status(400).json({ mensaje: 'Datos incompletos' });
+                }
+                else{
+                    if(!req.body.id_usuario){
+                        return res.status(400).json({ mensaje: 'Datos incompletos' });
+                    }
+                    else{
+                        var consultaSql = `INSERT INTO gastos (nombre_gasto, monto_gasto, fecha_gasto, id_grupo, id_usuario) VALUES ('${req.body.nombre_gasto}',${req.body.monto_gasto},'${req.body.fecha_gasto}',${req.body.id_grupo}, ${req.body.id_usuario});`;
+                        connection.query(consultaSql, (error, results)=>{
+                            if(error){
+                                console.log(error);
+                                return res.status(500).json({ mensaje: 'Error de servidor' });
+                            }
+                            else{
+                                res.status(201).json({ mensaje: 'Gasto agregado'});
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+}
 
+//agregar nuevo usuario a grupo
+
+function agregarUsuarioG(req, res){
+    if(!req.body.correo_usuario){
+        return res.status(400).json({ mensaje: 'Datos incompletos' });
+    }
+    else{
+        if(!req.body.id_grupo){
+            return res.status(400).json({ mensaje: 'Datos incompletos' });
+        }
+        else{
+            var consultaSqlUno = `SELECT id_usuario FROM usuarios WHERE correo_usuario = '${req.body.correo_usuario}';`;
+            connection.query(consultaSqlUno, async (error, resultado)=>{
+                if(error){
+                    return res.status(500).json({ mensaje: 'Error de servidor'});
+                }
+                else{
+                    if(resultado.length === 0){
+                        return res.status(404).json({ mensaje: 'El usuario no existe.'});
+                    }
+                    var status;
+                    let idUser = resultado[0].id_usuario;
+                    try{
+                        status = await agregarUsuariosGp(idUser, req.body.id_grupo);
+                    }
+                    catch (error){
+                        status = error;
+                    }
+                    if(status == 1){
+                        res.status(201).json({ mensaje: 'Usuario agregado'});
+                    }
+                    else{
+                        if(status == 3){
+                            return res.status(409).json({ mensaje: 'El usuario ya esta agregado'});
+                        }
+                        return res.status(500).json({ mensaje: 'Error de servidor'});
+                    }
+                }
+            })
+            
+        }
+    }
 }
 
 module.exports = {
-  registrarGrupo, gruposUsuario, agregarGasto
+  registrarGrupo, gruposUsuario, agregarGasto, agregarUsuarioG
 };
