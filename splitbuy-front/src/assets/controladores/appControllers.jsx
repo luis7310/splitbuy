@@ -1,6 +1,8 @@
 import {jwtDecode} from "jwt-decode";
 import AuthVal from "../../auth/authVal";
+import { useNavigate } from "react-router-dom";
 
+    
     //funcion para eliminar el token y cerrar sesion
     export const cerrarSesion = ()=>{
         sessionStorage.removeItem("tokenSplitbuy");
@@ -9,6 +11,7 @@ import AuthVal from "../../auth/authVal";
 
     //funcion para ir a pagina de inicio y recargar
     export const goHome = ()=>{
+        const navigate = useNavigate();
         navigate("/home");
         window.location.reload();
     }

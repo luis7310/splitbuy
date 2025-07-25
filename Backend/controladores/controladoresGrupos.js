@@ -157,6 +157,28 @@ function agregarUsuarioG(req, res){
     }
 }
 
+function abandonarGrupo(req, res){
+    if(!req.body.idGrupo){
+        return res.status(400).json({ mensaje: 'Datos incompletos: id de grupo' });
+    }
+    else{
+        if(!req.body.idUser){
+            return res.status(400).json({ mensaje: 'Datos incompletos: id usuario' });
+        }
+        else{
+            var sqlConsult = 'DELETE FROM pertenecen WHERE id_usuario = ' + req.body.idUser + ' AND id_grupo = ' + req.body.idGrupo + ';';
+            connection.query(sqlConsult, async (error, resultado)=>{
+                if(error){
+                    return res.status(500).json({ mensaje: 'Error de servidor' });
+                }
+                else{
+                    return res.status(200).json({ mensaje: 'Usuario eliminado del grupo' });
+                }
+            });
+        }
+    }
+}
+
 module.exports = {
-  registrarGrupo, gruposUsuario, agregarGasto, agregarUsuarioG
+  registrarGrupo, gruposUsuario, agregarGasto, agregarUsuarioG, abandonarGrupo
 };

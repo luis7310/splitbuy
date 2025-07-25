@@ -3,12 +3,13 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import AuthVal from '../../auth/authVal'
 import {jwtDecode} from "jwt-decode";
-import { ValidarCorreos, cerrarSesion, getToken } from '../controladores/appControllers';
+import { ValidarCorreos, cerrarSesion, getToken} from '../controladores/appControllers';
 
 export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fechaCreado}){
     const [agregarGastoM, setAgregarG] = useState(false);
     const [agregarUsuarioM, setAgregarU] = useState(false);
     const navigate = useNavigate();
+    const [leftGp, setLeftGp] = useState(false);
     const [mensaje, setMensaje] = useState('');
     const [datosFormularios, setDatosForm] = useState({
         nombre_gasto: '',
@@ -78,6 +79,27 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                 }
             }
         }
+    }
+
+    //funcion para salie del grupo
+    function leftGroup(){
+        var idUser = getToken();
+        var data = {
+            "idUser": idUser.id,
+            "idGrupo": idGrupo
+        }
+        console.log(data)
+        fetch('http://localhost:3000/grupos/abandonar/grupo',{
+            method:'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+        })
+        .then((response)=>{
+            navigate('/')
+            window.location.reload();
+        });
     }
 
     function addUserGroup(){
@@ -172,8 +194,31 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                     </div>
                     )
                 }
-                
+                <div id="tablaGastos">
+                    <table className='tabla'>
+                        <thead>
+                            <tr>
+                                <th>Gasto</th>
+                                <th>Monto</th>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
+                        </tbody>
+                    </table>
+                </div>
+                <div className='btn-left-gp'>
+                    <button id='btn-left-gp' onClick={()=>setLeftGp(true)} >Abandonar grupo</button>
+                </div>
+                {leftGp &&(
+                    <div className='btn-left-gp'>
+                        <p>¿Estas seguro que deseas abandonar el grupo?</p>
+                        <button className='btn_window' onClick={leftGroup}>Aceptar</button>
+                        <button className='btn_window' onClick={()=>setLeftGp(false)}>Cancelar</button>
+                    </div>
+                )}
             </div>
         </div>
     )
