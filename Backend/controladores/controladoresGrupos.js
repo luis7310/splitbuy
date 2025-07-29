@@ -179,6 +179,24 @@ function abandonarGrupo(req, res){
     }
 }
 
+function gastosGrupo(req, res){
+    if(!req.body.id_grupo){
+        return res.status(400).json({ mensaje: 'Datos incompletos: id grupo' });
+    }
+    else{
+        var consultaSql = `SELECT gastos.*, usuarios.nombre_usuario
+                            FROM gastos 
+                            INNER JOIN usuarios ON gastos.id_usuario = usuarios.id_usuario
+                            WHERE id_grupo = ${req.body.id_grupo};`;
+        connection.query(consultaSql, async (error, resultado)=>{
+            if(error){
+                return res.status(500).json({ mensaje: 'Error de servidor' });
+            }
+            return res.status(200).json(resultado);
+        })
+    }
+}
+
 module.exports = {
-  registrarGrupo, gruposUsuario, agregarGasto, agregarUsuarioG, abandonarGrupo
+  registrarGrupo, gruposUsuario, agregarGasto, agregarUsuarioG, abandonarGrupo, gastosGrupo
 };

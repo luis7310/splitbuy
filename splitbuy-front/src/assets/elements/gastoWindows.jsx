@@ -1,5 +1,6 @@
 import '../estilos/gastoWindows.css'
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import AuthVal from '../../auth/authVal'
 import {jwtDecode} from "jwt-decode";
@@ -17,6 +18,7 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
         fecha_gasto: '',
         correo_usuario: ''
     });
+    const [gastos, setGastos] = useState([]);
 
     const manejarCambio = (e) => {
        const { name, value } = e.target;
@@ -68,7 +70,8 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                             setTimeout(() => {
                                 setMensaje('');
                             }, 2000);
-                        setAgregarG(false)
+                        setAgregarG(false);
+                        setInfo();
                     })
                     .catch(error =>{
                         setMensaje('Algo ha salido mal, intente mas tarde.');
@@ -81,6 +84,23 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
         }
     }
 
+    //funcion para busar gastos del grupo
+    async function gastosGrupo(id_grupo){
+        return fetch('http://localhost:3000/grupos/gastos/grupo',{
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                },
+            body: JSON.stringify({"id_grupo": id_grupo}),
+        }).then(response => response.json())
+        .then(respuesta => {
+            return respuesta;
+        })
+        .catch(error => {
+        return [];
+    });
+    }
+
     //funcion para salie del grupo
     function leftGroup(){
         var idUser = getToken();
@@ -88,7 +108,6 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
             "idUser": idUser.id,
             "idGrupo": idGrupo
         }
-        console.log(data)
         fetch('http://localhost:3000/grupos/abandonar/grupo',{
             method:'POST',
                 headers: {
@@ -156,6 +175,17 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
         }
     }
 
+    const setInfo = async ()=>{
+        var datosGasto = await gastosGrupo(idGrupo);
+        setGastos(datosGasto);
+    }
+
+    //funciones a ejecutarse on load
+        useEffect(() => {
+         
+          setInfo();
+        }, []);
+
     return(
         <div id="container-windows">
             <div id="windows-data">
@@ -165,6 +195,7 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                 <button className='btn_window' onClick={() => {setAgregarG(true); setAgregarU(false);}}>Agregar gasto</button>
                 <button className='btn_window' onClick={() => {setAgregarU(true); setAgregarG(false);}}>Agregar miembro</button>
                 <button className='btn_window' onClick={()=> navigate("/")}>Inicio</button>
+                <button className='btn_window' onClick={()=> setInfo()}>Actualizar</button>
                 
                 {agregarGastoM && (
                     <div className='containerModal' id="AgregarGasto">
@@ -205,10 +236,23 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                             </tr>
                         </thead>
                         <tbody>
-
+                           {Array.isArray(gastos) && gastos.map((item, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <th>{item.nombre_gasto}</th>
+                                        <th>${item.monto_gasto}</th>
+                                        <th>{item.fecha_gasto?.slice(0, 10)}</th>
+                                        <th>{item.nombre_usuario}</th>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
+                <div>
+                        <h3 className='montos'>Total: 570 <br></br> Balance: -200</h3> 
+                        
+                    </div>
                 <div className='btn-left-gp'>
                     <button id='btn-left-gp' onClick={()=>setLeftGp(true)} >Abandonar grupo</button>
                 </div>

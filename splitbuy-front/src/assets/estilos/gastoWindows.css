@@ -137,6 +137,16 @@ p{
     border: 1px solid #333446;
 }
 
+.montos{
+    font-family: 'Arial', sans-serif;
+    padding-left: 10px;
+    margin: 0;
+    border: 1px solid #333446;
+    border-radius: 10px;
+    background-color: #B8CFCE;
+    color: #333446
+}
+
 /*Botones de la parte superior*/
 .btn_window{
     height: 25px;
