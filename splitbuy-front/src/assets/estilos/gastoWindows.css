@@ -56,6 +56,17 @@ p{
   margin-top: 10px;
 }
 
+.encabezado-table{
+    border: 1px solid #333446;
+    color: #333446;
+    background-color: #B8CFCE;
+}
+
+.element-table{
+    border: 1px solid #333446;
+
+}
+
 /*Boton abandonar grupo*/
 .btn-left-gp{
     margin-top: 10px;

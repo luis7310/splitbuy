@@ -19,6 +19,7 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
         correo_usuario: ''
     });
     const [gastos, setGastos] = useState([]);
+    const [total, setTotal] = useState(0);
 
     const manejarCambio = (e) => {
        const { name, value } = e.target;
@@ -175,9 +176,26 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
         }
     }
 
-    const setInfo = async ()=>{
+    //calcular el total gastado por el grupo
+    const calTotal = (cantidad)=>{
+        var total = 0;
+        cantidad.map((item, index)=>{
+            total += item.monto_gasto;
+        })
+        setTotal(total);
+    }
+
+    //calcular el balance
+    const balance = ()=>{
+
+    }
+
+
+    //actualizar info de la lista
+    async function setInfo() {
         var datosGasto = await gastosGrupo(idGrupo);
         setGastos(datosGasto);
+        calTotal(datosGasto);
     }
 
     //funciones a ejecutarse on load
@@ -228,7 +246,7 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                 <div id="tablaGastos">
                     <table className='tabla'>
                         <thead>
-                            <tr>
+                            <tr className='encabezado-table'>
                                 <th>Gasto</th>
                                 <th>Monto</th>
                                 <th>Fecha</th>
@@ -238,7 +256,7 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                         <tbody>
                            {Array.isArray(gastos) && gastos.map((item, index) => {
                                 return (
-                                    <tr key={index}>
+                                    <tr className='element-table' key={index}>
                                         <th>{item.nombre_gasto}</th>
                                         <th>${item.monto_gasto}</th>
                                         <th>{item.fecha_gasto?.slice(0, 10)}</th>
@@ -250,7 +268,7 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                     </table>
                 </div>
                 <div>
-                        <h3 className='montos'>Total: 570 <br></br> Balance: -200</h3> 
+                        <h3 className='montos'>Total: ${total} <br></br> Balance: -200</h3> 
                         
                     </div>
                 <div className='btn-left-gp'>
