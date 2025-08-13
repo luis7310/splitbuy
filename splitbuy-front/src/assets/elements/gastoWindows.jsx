@@ -20,6 +20,12 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
     });
     const [gastos, setGastos] = useState([]);
     const [total, setTotal] = useState(0);
+    const [balanceUsuario, setBalance] = useState({
+        balance: 0,
+        gastoUsuario: 0,
+        gastoTotal:0,
+        miembros: 0
+    })
 
     const manejarCambio = (e) => {
        const { name, value } = e.target;
@@ -122,6 +128,7 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
         });
     }
 
+    //funcion agregar usuario a un grupo
     function addUserGroup(){
         if(!datosFormularios.correo_usuario){
         setMensaje('Ingrese un correo.');
@@ -186,7 +193,24 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
     }
 
     //calcular el balance
-    const balance = ()=>{
+    const balance = async (id_g)=>{
+        var dataUser = getToken();
+        var info = {
+            id_grupo: id_g,
+            id_usuario: dataUser.id
+        }
+        return fetch('http://localhost:3000/grupos/gastos/datos/usuario',{
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(info),
+            })
+            .then(response => response.json())
+            .then(res =>{
+                return res;
+            })
+            .catch(error => 0)
 
     }
 
@@ -194,13 +218,21 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
     //actualizar info de la lista
     async function setInfo() {
         var datosGasto = await gastosGrupo(idGrupo);
+        var balanceDatos = await balance(idGrupo);
+        if(balanceDatos != 0){
+            setBalance({
+                balance: balanceDatos.balance,
+                gastoUsuario: balanceDatos.montoUsuario,
+                gastoTotal: balanceDatos.gastoTotal,
+                miembros: balanceDatos.miembrosGrupo
+            })
+        }
         setGastos(datosGasto);
         calTotal(datosGasto);
     }
 
     //funciones a ejecutarse on load
         useEffect(() => {
-         
           setInfo();
         }, []);
 
@@ -268,9 +300,9 @@ export default function GastoWindows({idGrupo, nombreGrupo, descripcionGrupo, fe
                     </table>
                 </div>
                 <div>
-                        <h3 className='montos'>Total: ${total} <br></br> Balance: -200</h3> 
-                        
-                    </div>
+                    <h3 className='montos'>Total: ${total} <br></br>Gasto usuario: ${balanceUsuario.gastoUsuario}<br></br> Balance: {balanceUsuario.balance}</h3>                 
+                    <p>Miembros del grupo: {balanceUsuario.miembros}</p>
+                </div>
                 <div className='btn-left-gp'>
                     <button id='btn-left-gp' onClick={()=>setLeftGp(true)} >Abandonar grupo</button>
                 </div>
