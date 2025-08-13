@@ -209,6 +209,7 @@ function gastoUsuario(req, res){
             var montoUsuario = 0;
             var miembrosNumber = 0;
             var gastoTotal = 0;
+            var balance = 0;
             var sqlCode = 'SELECT * FROM gastos WHERE id_grupo = ' + req.body.id_grupo + ' AND id_usuario = ' + req.body.id_usuario + ';';
             connection.query(sqlCode, (error, resultado)=>{
                 if(error){
@@ -231,7 +232,8 @@ function gastoUsuario(req, res){
                         for(let cant in resultado3){
                             gastoTotal += resultado3[cant].monto_gasto;
                         }
-                        return res.status(200).json({"montoUsuario": montoUsuario, "miembrosGrupo": miembrosNumber, "gastoTotal": gastoTotal});
+                        balance = (gastoTotal/miembrosNumber) - montoUsuario;
+                        return res.status(200).json({"montoUsuario": montoUsuario, "miembrosGrupo": miembrosNumber, "gastoTotal": gastoTotal, "balance":balance});
                     })
                 })
             })
