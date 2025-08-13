@@ -233,6 +233,7 @@ function gastoUsuario(req, res){
                             gastoTotal += resultado3[cant].monto_gasto;
                         }
                         balance = (gastoTotal/miembrosNumber) - montoUsuario;
+                        balance = balance * -1;
                         return res.status(200).json({"montoUsuario": montoUsuario, "miembrosGrupo": miembrosNumber, "gastoTotal": gastoTotal, "balance":balance});
                     })
                 })
