@@ -197,6 +197,48 @@ function gastosGrupo(req, res){
     }
 }
 
+function gastoUsuario(req, res){
+    if(!req.body.id_grupo){
+        return res.status(400).json({ mensaje: 'Datos incompletos: id grupo' });
+    }
+    else{
+        if(!req.body.id_usuario){
+            return res.status(400).json({ mensaje: 'Datos incompletos: id usuario' });
+        }
+        else{
+            var montoUsuario = 0;
+            var miembrosNumber = 0;
+            var gastoTotal = 0;
+            var sqlCode = 'SELECT * FROM gastos WHERE id_grupo = ' + req.body.id_grupo + ' AND id_usuario = ' + req.body.id_usuario + ';';
+            connection.query(sqlCode, (error, resultado)=>{
+                if(error){
+                    return res.status(500).json({ mensaje: 'Error de servidor' });
+                }
+                for(let monto in resultado){
+                    montoUsuario += resultado[monto].monto_gasto;
+                }
+                var codeMG = 'SELECT * FROM pertenecen WHERE id_grupo = ' + req.body.id_grupo + ';';
+                connection.query(codeMG, (error, resultado2)=>{
+                    if(error){
+                        return res.status(500).json({ mensaje: 'Error de servidor' });
+                    }
+                    miembrosNumber = resultado2.length;
+                    var codeTotal = 'SELECT monto_gasto FROM gastos WHERE id_grupo = ' + req.body.id_grupo + ';';
+                    connection.query(codeTotal,(error, resultado3)=>{
+                        if(error){
+                            return res.status(500).json({ mensaje: 'Error de servidor' });
+                        }
+                        for(let cant in resultado3){
+                            gastoTotal += resultado3[cant].monto_gasto;
+                        }
+                        return res.status(200).json({"montoUsuario": montoUsuario, "miembrosGrupo": miembrosNumber, "gastoTotal": gastoTotal});
+                    })
+                })
+            })
+        }
+    }
+}
+
 module.exports = {
-  registrarGrupo, gruposUsuario, agregarGasto, agregarUsuarioG, abandonarGrupo, gastosGrupo
+  registrarGrupo, gruposUsuario, agregarGasto, agregarUsuarioG, abandonarGrupo, gastosGrupo, gastoUsuario
 };
