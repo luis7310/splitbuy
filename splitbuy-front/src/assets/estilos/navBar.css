@@ -105,8 +105,30 @@
     border-color:#EAEFEF;
     font-size: 12px;
 }
+   /*Modal cambiar contraseña*/
+    #modal-newpassword{
+        width: 350px;
+        height: 250px;
+        background-color: #333446;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        display: flex;
+        gap: 20px;
+        flex-direction: column;
+        border: 1px solid #B8CFCE;
+        justify-content: center; 
+        align-items: center;
+    }
+
+    #modal-newpassword label {
+        display: block;           
+        margin-bottom: 2px;      
+        padding-top: 10px; 
+    }
 
 @media (min-width: 851px) {
+
     #menu-btn{
         display: none;
     }

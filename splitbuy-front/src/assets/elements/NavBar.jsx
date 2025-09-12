@@ -12,8 +12,13 @@ export default function NavBar(){
     const [menuResponsive, setMenuRespo] = useState(false);
     const [formData, setFormData] = useState({
         nombregrupo: '',
-        descripciongrupo: ''
+        descripciongrupo: '',
+        contra: '',
+        newContra1: '',
+        newContra2: ''
         });
+    const [newPassword, setNewPassword] = useState(false); // ventana modal actualizar contraseña
+    const [mensajePassword, setMsjPass] = useState('');  //mensaje error ventana cambiar contraseña
 
     const handleChange = (e) => {
     setFormData({
@@ -36,6 +41,57 @@ export default function NavBar(){
         }
         else{
             cerrarSesion();
+        }
+    }
+
+    async function changePassword(){
+        if(formData.contra != ''){
+            if(formData.newContra1 != ''){
+                if(formData.newContra2 != ''){
+                    if(formData.newContra1 === formData.newContra2){
+                        setMsjPass('');
+                        var userData = getToken();
+                        var dataPass = {
+                            password: formData.contra,
+                            newPassword: formData.newContra1,
+                            id: userData.id
+                        }
+                        const respuesta = await fetch('http://localhost:3000/usuarios/update/userpassword', {
+                            method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(dataPass),
+                        }).then(response => response.json())
+                        .then(response2 =>{
+                            setFormData({
+                                contra: '',
+                                newContra1: '',
+                                newContra2: ''
+                            })
+                            setMsjPass(response2.mensaje);
+                            setTimeout(()=>{
+                                setMsjPass('');
+                                setNewPassword(false); 
+                                goHome();
+                            }, 2000);
+                        })
+
+                    }
+                    else{
+                        setMsjPass('Las contraseñas no coinciden');
+                    }
+                    }
+                else{
+                    setMsjPass('Confirme su contraseña')
+                }
+            }
+            else{
+                setMsjPass('Ingrese su nueva contraseña');
+            }
+        }
+        else{
+            setMsjPass('Ingrese su contraseña actual');
         }
     }
 
@@ -84,7 +140,7 @@ export default function NavBar(){
     const profileConf = (e)=>{
         switch(e.target.value) {
             case "2":
-                console.log("Actualizar contraseña");
+                setNewPassword(true)
                 break;
             case "3":
               // Acción para Configuración
@@ -140,10 +196,31 @@ export default function NavBar(){
                     <button onClick={goHome} className='btn-menu-resp'>Home</button>
                     <button onClick={() => setItsOpen(true)} className='btn-menu-resp'>Agregar Gasto</button>
                     <button className='btn-menu-resp'>Configuracion</button>
-                    <button className='btn-menu-resp'>Actualizar contraseña</button>
+                    <button onClick={() => setNewPassword(true)} className='btn-menu-resp'>Actualizar contraseña</button>
                     <button onClick={cerrarSesion} className='btn-menu-resp'>Cerrar sesión</button>
                 </div>
             )}
+            {
+                newPassword && (
+                    <div className='modal-backdrop'>
+                        <div id="modal-newpassword">
+                            <div>
+                                <label htmlFor="contra">Contraseña actual</label>
+                                <input type='password' name='contra' className='inputs-modal' value={formData.contra} onChange={handleChange} ></input>
+                                <label htmlFor="newcontra">Nueva contraseña</label>
+                                <input type='password' name='newContra1' id='newContra1' className='inputs-modal' value={formData.newContra1} onChange={handleChange} ></input>
+                                <label htmlFor="newcontra2">Confirmar contraseña</label>
+                                <input type='password' name='newContra2' id='newContra2' className='inputs-modal' value={formData.newContra2} onChange={handleChange} ></input>
+                            </div>
+                            <div className='msj-error'>{mensajePassword}</div>
+                            <div className='modal-buttons'>
+                                <button className='btn-modal'  onClick={() => {changePassword();}}>Aceptar</button>
+                                <button className='btn-modal' onClick={() => {setNewPassword(false); goHome();}}>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
        </>
     )
 }

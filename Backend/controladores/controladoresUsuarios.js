@@ -68,13 +68,13 @@ async function logginUsuario(req, res){
 //funcion para actualizar la contraseña del usuario
 async function updatePasswordUsuario(req, res){
     //validacion de datos completos
-    if(!req.body.id || !req.body.correo || !req.body.password || !req.body.newPassword){
+    if(!req.body.id || !req.body.password || !req.body.newPassword){
         return res.status(400).json({ mensaje: 'Datos incompletos' });
     }
     else{
-        let sqlCode = 'SELECT * FROM usuarios WHERE id_usuario = ? AND correo_usuario = ?';
+        let sqlCode = 'SELECT * FROM usuarios WHERE id_usuario = ?';
         //peticion a la base de datos
-        const [rows] = await connection.promise().query(sqlCode, [req.body.id, req.body.correo]);
+        const [rows] = await connection.promise().query(sqlCode, [req.body.id]);
         //si no se encuentra el usuario se devuelve el mensaje de no encontrado
         if (!rows[0]) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -86,7 +86,7 @@ async function updatePasswordUsuario(req, res){
                 //creamos hash con la nueva contraseña
                 let newPass =  await bcrypt.hash(req.body.newPassword, 10);
                 //codigo mysql para actualizar la contraseña
-                let codeAct = `UPDATE usuarios SET contrasena_usuario = '${newPass}' WHERE id_usuario = ${req.body.id} AND correo_usuario = '${req.body.correo}'`
+                let codeAct = `UPDATE usuarios SET contrasena_usuario = '${newPass}' WHERE id_usuario = ${req.body.id};`
                 connection.query(codeAct,(err, results, fields)=>{
                     if(err){
                         return res.status(500).json({ mensaje: 'Error de servidor' });
@@ -98,7 +98,7 @@ async function updatePasswordUsuario(req, res){
             }
             else{
                 //si no coinciden se devuelve el mensaje de error
-                return res.status(401).json({ message: 'Contraseña incorrecta' });
+                return res.status(401).json({ mensaje: 'Contraseña incorrecta' });
             }
         }
     }
