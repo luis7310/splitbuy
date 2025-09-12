@@ -1,0 +1,226 @@
+import '../estilos/NavBar.css'
+import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import AuthVal from '../../auth/authVal';
+import { useEffect } from 'react';
+import {jwtDecode} from "jwt-decode";
+
+export default function NavBar(){
+    const navigate = useNavigate();
+    const [token, setToken] = useState(null);
+    const [itsOpen, setItsOpen] = useState(false);
+    const [menuResponsive, setMenuRespo] = useState(false);
+    const [formData, setFormData] = useState({
+        nombregrupo: '',
+        descripciongrupo: '',
+        contra: '',
+        newContra1: '',
+        newContra2: ''
+        });
+    const [newPassword, setNewPassword] = useState(false); // ventana modal actualizar contraseña
+    const [mensajePassword, setMsjPass] = useState('');  //mensaje error ventana cambiar contraseña
+
+    const handleChange = (e) => {
+    setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+    });
+    };
+
+    useEffect(() => {
+      var tok = getToken();
+      setToken(tok);
+    }, []);
+    
+    const getToken = ()=>{
+        let tkn = sessionStorage.getItem("tokenSplitbuy");
+        let ntkn = AuthVal(tkn);
+        if(ntkn.estado == true){
+            var data = jwtDecode(ntkn.token);
+            return data;
+        }
+        else{
+            cerrarSesion();
+        }
+    }
+
+    async function changePassword(){
+        if(formData.contra != ''){
+            if(formData.newContra1 != ''){
+                if(formData.newContra2 != ''){
+                    if(formData.newContra1 === formData.newContra2){
+                        setMsjPass('');
+                        var userData = getToken();
+                        var dataPass = {
+                            password: formData.contra,
+                            newPassword: formData.newContra1,
+                            id: userData.id
+                        }
+                        const respuesta = await fetch('http://localhost:3000/usuarios/update/userpassword', {
+                            method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(dataPass),
+                        }).then(response => response.json())
+                        .then(response2 =>{
+                            setFormData({
+                                contra: '',
+                                newContra1: '',
+                                newContra2: ''
+                            })
+                            setMsjPass(response2.mensaje);
+                            setTimeout(()=>{
+                                setMsjPass('');
+                                setNewPassword(false); 
+                                goHome();
+                            }, 2000);
+                        })
+
+                    }
+                    else{
+                        setMsjPass('Las contraseñas no coinciden');
+                    }
+                    }
+                else{
+                    setMsjPass('Confirme su contraseña')
+                }
+            }
+            else{
+                setMsjPass('Ingrese su nueva contraseña');
+            }
+        }
+        else{
+            setMsjPass('Ingrese su contraseña actual');
+        }
+    }
+
+    async function crearGrupo(event){
+        event.preventDefault()
+        if(formData.nombregrupo != ''){
+            var datos = getToken();
+        var info = {
+            "nombre": formData.nombregrupo,
+            "descripcion":formData.descripciongrupo,
+            "id_user": datos.id
+        }
+        if(info.descripcion == ''){
+            info.descripcion = 'Sin descripcion del grupo.';
+        }
+         const respuesta = await fetch('http://localhost:3000/grupos/crear/grupo', {
+            method: 'POST',
+            headers: {
+             'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(info),
+          });
+          setFormData({
+            nombregrupo: '',
+            descripciongrupo: ''
+          })
+          setItsOpen(false);
+          goHome();
+        }
+        else{
+            alert("Ingrese un nombre del gasto");
+        }
+        
+    }
+
+    const cerrarSesion = ()=>{
+        sessionStorage.removeItem("tokenSplitbuy");
+        window.location.reload();
+    }
+
+    const goHome = ()=>{
+        navigate("/");
+        window.location.reload();
+    }
+
+    const profileConf = (e)=>{
+        switch(e.target.value) {
+            case "2":
+                setNewPassword(true)
+                break;
+            case "3":
+              // Acción para Configuración
+                console.log("Configuración");
+                break;
+            case "4":
+                cerrarSesion();
+                break;
+            default:
+                console.log("error");
+                break;
+              }
+    }
+
+    return(
+        <>
+       <nav id='navContainer'>
+            <div id="nav-left">
+                <button className='btn-design' onClick={goHome}>SplitBuy</button>
+                <button className='btn-design' onClick={goHome}>Inicio</button>
+                <button className='btn-design' onClick={() => setItsOpen(true)}>Agregar grupo</button>
+            </div>
+            <div id='nav-center'>
+                <input placeholder='Buscar gasto' id="input-search" type='text'></input>
+                <button className='btn-design'>Buscar</button>
+            </div>
+            <div id="nav-right">
+                <select defaultValue={1} onChange={profileConf} id='profile-options'>
+                    <option disabled value={1}>{token ? token.nombre : "Perfil"}</option>
+                    <option value={2}>Actualizar contraseña</option>
+                    <option value={3}>Configuración</option>
+                    <option value={4}>Cerrar sesión</option>
+                </select>
+            </div>
+            <button onClick={() => setMenuRespo(!menuResponsive)} id="menu-btn">=</button>
+       </nav>
+          {itsOpen && (
+                <div className="modal-backdrop">
+                    <form id="formcontainer">
+                        <label htmlFor="nombregrupo">Nombre del gasto</label>
+                        <input name="nombregrupo" className='inputs-modal' id="nombregrupo" value={formData.nombregrupo} onChange={handleChange} type="text" />
+                        <label htmlFor="descripciongrupo">Descripción</label>
+                        <input name="descripciongrupo" className='inputs-modal' id="descripciongrupo"  value={formData.descripciongrupo} onChange={handleChange} type="text" />
+                        <div className='modal-buttons'>
+                            <button className='btn-modal' type="submit" onClick={crearGrupo}>Crear</button>
+                            <button className='btn-modal' type="button" onClick={() => setItsOpen(false)}>Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            )}
+            {menuResponsive && (
+                <div id="menu-responsive">
+                    <button onClick={goHome} className='btn-menu-resp'>Home</button>
+                    <button onClick={() => setItsOpen(true)} className='btn-menu-resp'>Agregar Gasto</button>
+                    <button className='btn-menu-resp'>Configuracion</button>
+                    <button onClick={() => setNewPassword(true)} className='btn-menu-resp'>Actualizar contraseña</button>
+                    <button onClick={cerrarSesion} className='btn-menu-resp'>Cerrar sesión</button>
+                </div>
+            )}
+            {
+                newPassword && (
+                    <div className='modal-backdrop'>
+                        <div id="modal-newpassword">
+                            <div>
+                                <label htmlFor="contra">Contraseña actual</label>
+                                <input type='password' name='contra' className='inputs-modal' value={formData.contra} onChange={handleChange} ></input>
+                                <label htmlFor="newcontra">Nueva contraseña</label>
+                                <input type='password' name='newContra1' id='newContra1' className='inputs-modal' value={formData.newContra1} onChange={handleChange} ></input>
+                                <label htmlFor="newcontra2">Confirmar contraseña</label>
+                                <input type='password' name='newContra2' id='newContra2' className='inputs-modal' value={formData.newContra2} onChange={handleChange} ></input>
+                            </div>
+                            <div className='msj-error'>{mensajePassword}</div>
+                            <div className='modal-buttons'>
+                                <button className='btn-modal'  onClick={() => {changePassword();}}>Aceptar</button>
+                                <button className='btn-modal' onClick={() => {setNewPassword(false); goHome();}}>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+       </>
+    )
+}

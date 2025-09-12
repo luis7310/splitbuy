@@ -1,0 +1,197 @@
+#container-windows{
+    width: 100%;
+    height: 100vh;
+    z-index: 100;
+    position: fixed;
+    background-color: #333446;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+#windows-data{
+    height: 100vh;
+    background-color: #EAEFEF;
+    box-sizing: border-box;
+    padding: 0px 15px 15px 15px;
+}
+
+h1{
+    font-size: 25px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #333446;
+    font-family: 'Arial', sans-serif;
+}
+p{
+     white-space: normal;
+    width: 100%;
+    font-size: 15px;
+    color: #7F8CAA;
+    margin-bottom: 5px;
+}
+
+.msj-error{
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    color: #ff8686;
+}
+
+#tablaGastos{
+    width: 100%;
+    min-height: 100px;
+    max-height: 400px;
+    margin-top: 10px;
+    font-family: 'Arial', sans-serif;
+    background-color: #7F8CAA;
+    border: 1px solid #333446;
+    color: #EAEFEF;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.encabezado-table{
+    border: 1px solid #333446;
+    color: #333446;
+    background-color: #B8CFCE;
+}
+
+.element-table{
+    border: 1px solid #333446;
+
+}
+
+/*Boton abandonar grupo*/
+.btn-left-gp{
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+#btn-left-gp{
+    height: 30px;
+    background-color: #ff8686;
+    color: #333446;
+    border: 1px solid #333446;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#btn-left-gp:hover{
+    background-color: #7F8CAA;
+    color: #EAEFEF;
+}
+
+#btn-left-gp:active{
+    background-color: #333446;
+}
+
+
+/*Contenedor de las ventanas modales*/
+.containerModal{
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 auto;
+    margin-top: 15px;
+    font-family: 'Arial', sans-serif;
+    background-color: #B8CFCE;
+    padding: 10px;
+    border: 1px solid #333446;
+    border-radius: 10px;
+}
+
+/*Clase botones modales*/
+.btn-modal-windows{
+    width: 100px;
+    height: 25px;
+    border: 1px solid #333446;
+    border-radius: 10px;
+    background-color: #EAEFEF;
+}
+
+.btn-modal-windows:hover{
+    cursor: pointer;
+    background-color: #7F8CAA;
+    color: #EAEFEF;
+}
+
+.btn-modal-windows:active{
+    background-color: #47475f;
+    border-color:#EAEFEF;
+}
+
+.btn-container-window{
+    width: 350px;
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between; 
+    gap: 10px; 
+    margin-top: 10px;
+}
+
+/*Clase para los inputs de los modales*/
+.input_window{
+    width: 350px;
+    height: 20px;
+    border-radius: 10px;
+    outline: none;
+    background-color: #EAEFEF;
+    border: 1px solid #333446;
+}
+
+.montos{
+    font-family: 'Arial', sans-serif;
+    padding-left: 10px;
+    margin: 0;
+    border: 1px solid #333446;
+    border-radius: 10px;
+    background-color: #B8CFCE;
+    color: #333446
+}
+
+/*Botones de la parte superior*/
+.btn_window{
+    height: 25px;
+    border: 1px solid #333446;
+    border-radius: 10px;
+    color: #333446;
+    background-color: #B8CFCE;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.btn_window:hover{
+    cursor: pointer;
+    background-color: #7F8CAA;
+    color: #EAEFEF;
+}
+
+.btn_window:active{
+    background-color: #47475f;
+    border-color:#EAEFEF;
+}
+
+/*Resolucion pc*/
+@media screen and (min-width:851px) {
+    #windows-data{
+    width: 60%;
+    }
+}
+
+
+/*Resolucion movil*/
+@media screen and (max-width:850px) {
+    #windows-data{
+        width: 100%;
+    }
+}
